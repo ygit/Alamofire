@@ -24,7 +24,7 @@ extension DispatchQueue {
 
 extension DataRequest {
     public func responseHandle<Value: Decodable>(decoding: Value.Type = Value.self) -> AsyncDataResponse<Value> {
-        let handle = detach { () -> AFDataResponse<Value> in
+        let handle = detach {
             await withCheckedContinuation { continuation in
                 self.responseDecodable(of: Value.self, queue: .asyncCompletionQueue) { continuation.resume(returning: $0) }
             }

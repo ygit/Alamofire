@@ -619,6 +619,7 @@
 		4C256A4F1B09656E0065714F /* Features */ = {
 			isa = PBXGroup;
 			children = (
+				31B3DE4E25C120D800760641 /* AsyncTests.swift */,
 				4CB0080C2455FE9700C38783 /* AuthenticationInterceptorTests.swift */,
 				4CFD6B132201338E00FFB5E3 /* CachedResponseHandlerTests.swift */,
 				4C341BB91B1A865A00C1B34D /* CacheTests.swift */,
@@ -635,7 +636,6 @@
 				F86AEFE51AE6A282007D9C76 /* TLSEvaluationTests.swift */,
 				4CCFA7991B2BE71600B6F460 /* URLProtocolTests.swift */,
 				F8AE910119D28DCC0078C7B2 /* ValidationTests.swift */,
-				31B3DE4E25C120D800760641 /* AsyncTests.swift */,
 			);
 			name = Features;
 			sourceTree = "<group>";
