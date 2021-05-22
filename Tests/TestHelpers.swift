@@ -75,6 +75,9 @@ struct Endpoint {
         case responseHeaders
         case status(Int)
         case stream(count: Int)
+        case websocket
+        case websocketCount(Int)
+        case websocketEcho
         case xml
 
         var string: String {
@@ -113,6 +116,12 @@ struct Endpoint {
                 return "/status/\(code)"
             case let .stream(count):
                 return "/stream/\(count)"
+            case .websocket:
+                return "/websocket"
+            case let .websocketCount(count):
+                return "/websocket/payloads/\(count)"
+            case .websocketEcho:
+                return "/websocket/echo"
             case .xml:
                 return "/xml"
             }
@@ -203,6 +212,19 @@ struct Endpoint {
     static func stream(_ count: Int) -> Endpoint {
         Endpoint(path: .stream(count: count))
     }
+    
+    @available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+    static func websocket(closeCode: URLSessionWebSocketTask.CloseCode = .normalClosure) -> Endpoint {
+        Endpoint(path: .websocket, queryItems: [.init(name: "closeCode", value: "\(closeCode.rawValue)")])
+    }
+    
+    @available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+    static func websocketCount(_ count: Int = 2) -> Endpoint {
+        Endpoint(path: .websocketCount(count))
+    }
+    
+    @available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+    static let websocketEcho = Endpoint(path: .websocketEcho)
 
     static var xml: Endpoint {
         Endpoint(path: .xml, headers: [.contentType("application/xml")])
@@ -312,6 +334,17 @@ extension Session {
         streamRequest(endpoint as URLRequestConvertible,
                       automaticallyCancelOnStreamError: automaticallyCancelOnStreamError,
                       interceptor: interceptor)
+    }
+    
+    @available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+    func websocketRequest(_ endpoint: Endpoint,
+                          protocol: String? = nil,
+                          maximumMessageSize: Int = 1_048_576,
+                          interceptor: RequestInterceptor? = nil) -> WebSocketRequest {
+        websocketRequest(endpoint as URLRequestConvertible,
+                         protocol: `protocol`,
+                         maximumMessageSize: maximumMessageSize,
+                         interceptor: interceptor)
     }
 
     func download<Parameters: Encodable>(_ endpoint: Endpoint,

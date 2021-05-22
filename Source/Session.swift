@@ -456,6 +456,25 @@ open class Session {
         return request
     }
 
+    @available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+    open func websocketRequest(_ convertible: URLRequestConvertible,
+                               protocol: String? = nil,
+                               maximumMessageSize: Int = 1_048_576,
+                               interceptor: RequestInterceptor? = nil) -> WebSocketRequest {
+        let request = WebSocketRequest(convertible: convertible,
+                                       protocol: `protocol`,
+                                       maximumMessageSize: maximumMessageSize,
+                                       underlyingQueue: rootQueue,
+                                       serializationQueue: serializationQueue,
+                                       eventMonitor: eventMonitor,
+                                       interceptor: interceptor,
+                                       delegate: self)
+
+        perform(request)
+
+        return request
+    }
+
     // MARK: - DownloadRequest
 
     /// Creates a `DownloadRequest` using a `URLRequest` created using the passed components, `RequestInterceptor`, and
@@ -998,7 +1017,13 @@ open class Session {
                 case let r as DataRequest: self.performDataRequest(r)
                 case let r as DownloadRequest: self.performDownloadRequest(r)
                 case let r as DataStreamRequest: self.performDataStreamRequest(r)
-                default: fatalError("Attempted to perform unsupported Request subclass: \(type(of: request))")
+                default:
+                    if #available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *),
+                       let request = request as? WebSocketRequest {
+                        self.performWebSocketRequest(request)
+                    } else {
+                        fatalError("Attempted to perform unsupported Request subclass: \(type(of: request))")
+                    }
                 }
             }
         }
@@ -1011,6 +1036,13 @@ open class Session {
     }
 
     func performDataStreamRequest(_ request: DataStreamRequest) {
+        dispatchPrecondition(condition: .onQueue(requestQueue))
+
+        performSetupOperations(for: request, convertible: request.convertible)
+    }
+
+    @available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+    func performWebSocketRequest(_ request: WebSocketRequest) {
         dispatchPrecondition(condition: .onQueue(requestQueue))
 
         performSetupOperations(for: request, convertible: request.convertible)
