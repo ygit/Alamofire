@@ -150,12 +150,6 @@ final class WebSocketTests: BaseTestCase {
         XCTAssertNil(closeReason)
         XCTAssertNil(receivedCompletion?.error)
     }
-    
-    func testMany() {
-        for _ in 0..<100 {
-            testThatWebSocketsCanReceiveMultipleMessages()
-        }
-    }
 
     func testThatWebSocketsCanSendAndReceiveMessages() {
         // Given
