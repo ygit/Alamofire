@@ -12,7 +12,7 @@ import XCTest
 
 @available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
 final class WebSocketTests: BaseTestCase {
-    private let closeDelay: Int64 = 50
+    private let closeDelay: Int64 = 30
 
     func testThatWebSocketsCanReceiveAMessage() {
         // Given
@@ -140,7 +140,7 @@ final class WebSocketTests: BaseTestCase {
         var receivedCompletion: WebSocketRequest.Completion?
 
         // When
-        session.websocketRequest(.websocketCount(count, closeDelay: closeDelay * 2)).responseMessage { event in
+        session.websocketRequest(.websocketCount(count, closeDelay: closeDelay)).responseMessage { event in
             switch event.kind {
             case let .connected(`protocol`):
                 connectedProtocol = `protocol`
