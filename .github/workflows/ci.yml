@@ -27,7 +27,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Install Firewalk
-        run: brew reinstall alamofire/alamofire/firewalk && firewalk &
+        run: brew install alamofire/alamofire/firewalk && firewalk &
       - name: macOS (5.2)
         run: set -o pipefail && env NSUnbufferedIO=YES xcodebuild -project "Alamofire.xcodeproj" -scheme "Alamofire macOS" -destination "platform=macOS" clean test | xcpretty
   macOS_5_3:
@@ -38,7 +38,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Install Firewalk
-        run: brew reinstall alamofire/alamofire/firewalk && firewalk &
+        run: brew install alamofire/alamofire/firewalk && firewalk &
       - name: macOS (5.3)
         run: set -o pipefail && env NSUnbufferedIO=YES xcodebuild -project "Alamofire.xcodeproj" -scheme "Alamofire macOS" -destination "platform=macOS" clean test | xcpretty
   macOS_5_4:
@@ -60,7 +60,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Install Firewalk
-        run: brew reinstall alamofire/alamofire/firewalk && firewalk &
+        run: brew install alamofire/alamofire/firewalk && firewalk &
       - name: Catalyst
         run: set -o pipefail && env NSUnbufferedIO=YES xcodebuild -project "Alamofire.xcodeproj" -scheme "Alamofire iOS" -destination "platform=macOS" clean test | xcpretty
   iOS:
@@ -74,7 +74,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Install Firewalk
-        run: brew reinstall alamofire/alamofire/firewalk && firewalk &
+        run: brew install alamofire/alamofire/firewalk && firewalk &
       - name: iOS - ${{ matrix.destination }}
         run: set -o pipefail && env NSUnbufferedIO=YES xcodebuild -project "Alamofire.xcodeproj" -scheme "Alamofire iOS" -destination "${{ matrix.destination }}" clean test | xcpretty
   tvOS:
@@ -88,7 +88,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Install Firewalk
-        run: brew reinstall alamofire/alamofire/firewalk && firewalk &
+        run: brew install alamofire/alamofire/firewalk && firewalk &
       - name: tvOS - ${{ matrix.destination }}
         run: set -o pipefail && env NSUnbufferedIO=YES xcodebuild -project "Alamofire.xcodeproj" -scheme "Alamofire tvOS" -destination "${{ matrix.destination }}" clean test | xcpretty
   watchOS:
@@ -125,6 +125,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Install Firewalk
-        run: brew reinstall alamofire/alamofire/firewalk && firewalk &
+        run: brew install alamofire/alamofire/firewalk && firewalk &
       - name: SPM Test
         run: swift test -c debug
