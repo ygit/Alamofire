@@ -1488,7 +1488,7 @@ public class WebSocketRequest: Request {
     }
 
     struct SocketMutableState {
-        var enqueuedMessages: [(message: URLSessionWebSocketTask.Message, completionHandler: (Result<Void, Error>) -> Void)] = []
+        var enqueuedSends: [(message: URLSessionWebSocketTask.Message, completionHandler: (Result<Void, Error>) -> Void)] = []
         var handlers: [(queue: DispatchQueue, handler: (_ event: IncomingEvent) -> Void)] = []
     }
 
@@ -1549,16 +1549,16 @@ public class WebSocketRequest: Request {
 
         // Empty pending messages.
         $socketMutableState.write { state in
-            guard !state.enqueuedMessages.isEmpty else { return }
+            guard !state.enqueuedSends.isEmpty else { return }
 
-            let messages = state.enqueuedMessages
+            let sends = state.enqueuedSends
             self.underlyingQueue.async {
-                messages.forEach { message in
-                    webSocketTask.send(message.message) { message.completionHandler(Result(value: (), error: $0)) }
+                sends.forEach { send in
+                    webSocketTask.send(send.message) { send.completionHandler(Result(value: (), error: $0)) }
                 }
             }
 
-            state.enqueuedMessages = []
+            state.enqueuedSends = []
         }
     }
 
@@ -1657,7 +1657,7 @@ public class WebSocketRequest: Request {
         }
 
         guard let socket = socket else {
-            socketMutableState.enqueuedMessages.append((message, completionHandler))
+            socketMutableState.enqueuedSends.append((message, completionHandler))
             return
         }
 

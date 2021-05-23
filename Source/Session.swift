@@ -131,7 +131,7 @@ open class Session {
         self.serverTrustManager = serverTrustManager
         self.redirectHandler = redirectHandler
         self.cachedResponseHandler = cachedResponseHandler
-        eventMonitor = CompositeEventMonitor(monitors: defaultEventMonitors + eventMonitors)
+        eventMonitor = CompositeEventMonitor(monitors: defaultEventMonitors + eventMonitors, queue: rootQueue)
         delegate.eventMonitor = eventMonitor
         delegate.stateProvider = self
     }
