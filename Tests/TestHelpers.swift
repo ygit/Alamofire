@@ -212,17 +212,21 @@ struct Endpoint {
     static func stream(_ count: Int) -> Endpoint {
         Endpoint(path: .stream(count: count))
     }
-    
+
     @available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
-    static func websocket(closeCode: URLSessionWebSocketTask.CloseCode = .normalClosure) -> Endpoint {
-        Endpoint(path: .websocket, queryItems: [.init(name: "closeCode", value: "\(closeCode.rawValue)")])
+    static func websocket(closeCode: URLSessionWebSocketTask.CloseCode = .normalClosure, closeDelay: Int64 = 30) -> Endpoint {
+        Endpoint(path: .websocket, queryItems: [.init(name: "closeCode", value: "\(closeCode.rawValue)"),
+                                                .init(name: "closeDelay", value: "\(closeDelay)")])
     }
-    
+
     @available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
-    static func websocketCount(_ count: Int = 2) -> Endpoint {
-        Endpoint(path: .websocketCount(count))
+    static func websocketCount(_ count: Int = 2,
+                               closeCode: URLSessionWebSocketTask.CloseCode = .normalClosure,
+                               closeDelay: Int64 = 30) -> Endpoint {
+        Endpoint(path: .websocketCount(count), queryItems: [.init(name: "closeCode", value: "\(closeCode.rawValue)"),
+                                                            .init(name: "closeDelay", value: "\(closeDelay)")])
     }
-    
+
     @available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
     static let websocketEcho = Endpoint(path: .websocketEcho)
 
@@ -335,7 +339,7 @@ extension Session {
                       automaticallyCancelOnStreamError: automaticallyCancelOnStreamError,
                       interceptor: interceptor)
     }
-    
+
     @available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
     func websocketRequest(_ endpoint: Endpoint,
                           protocol: String? = nil,

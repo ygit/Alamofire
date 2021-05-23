@@ -1549,8 +1549,13 @@ public class WebSocketRequest: Request {
 
         // Empty pending messages.
         $socketMutableState.write { state in
-            state.enqueuedMessages.forEach { message in
-                webSocketTask.send(message.message) { message.completionHandler(Result(value: (), error: $0)) }
+            guard !state.enqueuedMessages.isEmpty else { return }
+
+            let messages = state.enqueuedMessages
+            self.underlyingQueue.async {
+                messages.forEach { message in
+                    webSocketTask.send(message.message) { message.completionHandler(Result(value: (), error: $0)) }
+                }
             }
 
             state.enqueuedMessages = []
@@ -1639,12 +1644,6 @@ public class WebSocketRequest: Request {
                 }
             }
         }
-
-//        $mutableState.read { mutableState in
-//            guard mutableState.state.canTransitionTo(.resumed) else { return }
-//
-//            underlyingQueue.async { if self.delegate?.startImmediately == true { self.resume() } }
-//        }
 
         return self
     }
