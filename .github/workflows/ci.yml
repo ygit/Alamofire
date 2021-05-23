@@ -40,7 +40,7 @@ jobs:
       - name: Install Firewalk
         run: brew reinstall alamofire/alamofire/firewalk && firewalk &
       - name: macOS (5.3)
-        run: set -o pipefail && env NSUnbufferedIO=YESxcodebuild -project "Alamofire.xcodeproj" -scheme "Alamofire macOS" -destination "platform=macOS" clean test | xcpretty
+        run: set -o pipefail && env NSUnbufferedIO=YES xcodebuild -project "Alamofire.xcodeproj" -scheme "Alamofire macOS" -destination "platform=macOS" clean test | xcpretty
   macOS_5_4:
     name: Test macOS (5.4)
     runs-on: firebreak
