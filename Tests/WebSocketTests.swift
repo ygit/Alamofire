@@ -20,13 +20,7 @@ final class WebSocketTests: BaseTestCase {
         let didReceiveMessage = expectation(description: "didReceiveMessage")
         let didDisconnect = expectation(description: "didDisconnect")
         let didComplete = expectation(description: "didComplete")
-        let taskDidComplete = expectation(description: "taskDidComplete")
-        let queue = DispatchQueue(label: #function)
-        let monitor = ClosureEventMonitor(queue: queue)
-        monitor.taskDidComplete = { _, _, _ in
-            taskDidComplete.fulfill()
-        }
-        let session = Session(rootQueue: queue, eventMonitors: [ /* NSLoggingEventMonitor(), */ monitor])
+        let session = Session()
 
         var connectedProtocol: String?
         var message: URLSessionWebSocketTask.Message?
@@ -53,7 +47,7 @@ final class WebSocketTests: BaseTestCase {
             }
         }
 
-        wait(for: [didConnect, didReceiveMessage, didDisconnect, taskDidComplete, didComplete],
+        wait(for: [didConnect, didReceiveMessage, didDisconnect, didComplete],
              timeout: timeout,
              enforceOrder: false)
 
@@ -71,13 +65,7 @@ final class WebSocketTests: BaseTestCase {
         let didReceiveMessage = expectation(description: "didReceiveMessage")
         let didDisconnect = expectation(description: "didDisconnect")
         let didComplete = expectation(description: "didComplete")
-        let taskDidComplete = expectation(description: "taskDidComplete")
-        let queue = DispatchQueue(label: #function)
-        let monitor = ClosureEventMonitor(queue: queue)
-        monitor.taskDidComplete = { _, _, _ in
-            taskDidComplete.fulfill()
-        }
-        let session = Session(rootQueue: queue, eventMonitors: [ /* NSLoggingEventMonitor(), */ monitor])
+        let session = Session()
 
         let `protocol` = "protocol"
         var connectedProtocol: String?
@@ -105,7 +93,7 @@ final class WebSocketTests: BaseTestCase {
             }
         }
 
-        wait(for: [didConnect, didReceiveMessage, didDisconnect, taskDidComplete, didComplete],
+        wait(for: [didConnect, didReceiveMessage, didDisconnect, didComplete],
              timeout: timeout,
              enforceOrder: true)
 
@@ -125,13 +113,8 @@ final class WebSocketTests: BaseTestCase {
         didReceiveMessage.expectedFulfillmentCount = count
         let didDisconnect = expectation(description: "didDisconnect")
         let didComplete = expectation(description: "didComplete")
-//        let taskDidComplete = expectation(description: "taskDidComplete")
-//        let queue = DispatchQueue(label: #function)
-//        let monitor = ClosureEventMonitor(queue: queue)
-//        monitor.taskDidComplete = { _, _, _ in
-//            taskDidComplete.fulfill()
-//        }
-        let session = Session() //rootQueue: queue, eventMonitors: [ /* NSLoggingEventMonitor(), */ monitor])
+
+        let session = Session()
 
         var connectedProtocol: String?
         var messages: [URLSessionWebSocketTask.Message] = []
@@ -158,9 +141,7 @@ final class WebSocketTests: BaseTestCase {
             }
         }
 
-        wait(for: [didConnect, didReceiveMessage, didDisconnect, /* taskDidComplete, */ didComplete],
-             timeout: timeout,
-             enforceOrder: true)
+        wait(for: [didConnect, didReceiveMessage, didDisconnect, didComplete], timeout: timeout, enforceOrder: true)
 
         // Then
         XCTAssertNil(connectedProtocol)
@@ -183,13 +164,7 @@ final class WebSocketTests: BaseTestCase {
         let didReceiveMessage = expectation(description: "didReceiveMessage")
         let didDisconnect = expectation(description: "didDisconnect")
         let didComplete = expectation(description: "didComplete")
-        let taskDidComplete = expectation(description: "taskDidComplete")
-        let queue = DispatchQueue(label: #function)
-        let monitor = ClosureEventMonitor(queue: queue)
-        monitor.taskDidComplete = { _, _, _ in
-            taskDidComplete.fulfill()
-        }
-        let session = Session(rootQueue: queue, eventMonitors: [ /* NSLoggingEventMonitor(), */ monitor])
+        let session = Session()
         let sentMessage = URLSessionWebSocketTask.Message.string("Echo")
 
         var connectedProtocol: String?
@@ -219,7 +194,7 @@ final class WebSocketTests: BaseTestCase {
         }
         request.send(sentMessage) { _ in didSend.fulfill() }
 
-        wait(for: [didConnect, didSend, didReceiveMessage, didDisconnect, taskDidComplete, didComplete],
+        wait(for: [didConnect, didSend, didReceiveMessage, didDisconnect, didComplete],
              timeout: timeout,
              enforceOrder: true)
 
@@ -236,13 +211,7 @@ final class WebSocketTests: BaseTestCase {
         // Given
         let didConnect = expectation(description: "didConnect")
         let didComplete = expectation(description: "didComplete")
-        let taskDidComplete = expectation(description: "taskDidComplete")
-        let queue = DispatchQueue(label: "com.alamofire.webSocketTests")
-        let monitor = ClosureEventMonitor(queue: queue)
-        monitor.taskDidComplete = { _, _, _ in
-            taskDidComplete.fulfill()
-        }
-        let session = Session(rootQueue: queue, eventMonitors: [ /* NSLoggingEventMonitor(), */ monitor])
+        let session = Session()
 
         var connectedProtocol: String?
         var receivedCompletion: WebSocketRequest.Completion?
@@ -261,7 +230,7 @@ final class WebSocketTests: BaseTestCase {
             }
         }
 
-        wait(for: [didConnect, taskDidComplete, didComplete], timeout: timeout, enforceOrder: false)
+        wait(for: [didConnect, didComplete], timeout: timeout, enforceOrder: false)
 
         // Then
         XCTAssertNil(connectedProtocol)
@@ -274,13 +243,7 @@ final class WebSocketTests: BaseTestCase {
         let didReceiveMessage = expectation(description: "didReceiveMessage")
         let didDisconnect = expectation(description: "didDisconnect")
         let didComplete = expectation(description: "didComplete")
-        let taskDidComplete = expectation(description: "taskDidComplete")
-        let queue = DispatchQueue(label: #function)
-        let monitor = ClosureEventMonitor(queue: queue)
-        monitor.taskDidComplete = { _, _, _ in
-            taskDidComplete.fulfill()
-        }
-        let session = Session(rootQueue: queue, eventMonitors: [ /* NSLoggingEventMonitor(), */ monitor])
+        let session = Session()
 
         var connectedProtocol: String?
         var message: URLSessionWebSocketTask.Message?
@@ -307,7 +270,7 @@ final class WebSocketTests: BaseTestCase {
             }
         }
 
-        wait(for: [didConnect, didReceiveMessage, didDisconnect, taskDidComplete, didComplete],
+        wait(for: [didConnect, didReceiveMessage, didDisconnect, didComplete],
              timeout: timeout,
              enforceOrder: false)
 
