@@ -140,7 +140,7 @@ final class WebSocketTests: BaseTestCase {
         var receivedCompletion: WebSocketRequest.Completion?
 
         // When
-        session.websocketRequest(.websocketCount(count, closeDelay: closeDelay * 2)).responseMessage { event in
+        session.websocketRequest(.websocketCount(count, closeDelay: closeDelay * 3)).responseMessage { event in
             switch event.kind {
             case let .connected(`protocol`):
                 connectedProtocol = `protocol`
