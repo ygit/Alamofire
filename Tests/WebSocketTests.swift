@@ -12,7 +12,7 @@ import XCTest
 
 @available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
 final class WebSocketTests: BaseTestCase {
-    private let closeDelay: Int64 = 40
+    private let closeDelay: Int64 = 50
 
     func testThatWebSocketsCanReceiveAMessage() {
         // Given
