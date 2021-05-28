@@ -1488,7 +1488,9 @@ public class WebSocketRequest: Request {
     }
 
     struct SocketMutableState {
-        var enqueuedSends: [(message: URLSessionWebSocketTask.Message, completionHandler: (Result<Void, Error>) -> Void)] = []
+        var enqueuedSends: [(message: URLSessionWebSocketTask.Message,
+                             queue: DispatchQueue,
+                             completionHandler: (Result<Void, Error>) -> Void)] = []
         var handlers: [(queue: DispatchQueue, handler: (_ event: IncomingEvent) -> Void)] = []
     }
 
@@ -1554,7 +1556,11 @@ public class WebSocketRequest: Request {
             let sends = state.enqueuedSends
             self.underlyingQueue.async {
                 sends.forEach { send in
-                    webSocketTask.send(send.message) { send.completionHandler(Result(value: (), error: $0)) }
+                    webSocketTask.send(send.message) { error in
+                        send.queue.async {
+                            send.completionHandler(Result(value: (), error: error))
+                        }
+                    }
                 }
             }
 
@@ -1649,6 +1655,7 @@ public class WebSocketRequest: Request {
     }
 
     public func send(_ message: URLSessionWebSocketTask.Message,
+                     queue: DispatchQueue = .main,
                      completionHandler: @escaping (Result<Void, Error>) -> Void) {
         guard !(isCancelled || isFinished) else {
             // Error for attempting send while cancelled or finished?
@@ -1657,11 +1664,17 @@ public class WebSocketRequest: Request {
         }
 
         guard let socket = socket else {
-            socketMutableState.enqueuedSends.append((message, completionHandler))
+            socketMutableState.enqueuedSends.append((message, queue, completionHandler))
             return
         }
-
-        socket.send(message) { completionHandler(Result(value: (), error: $0)) }
+        
+        underlyingQueue.async {
+            socket.send(message) { error in
+                queue.async {
+                    completionHandler(Result(value: (), error: error))
+                }
+            }
+        }
     }
 }
 

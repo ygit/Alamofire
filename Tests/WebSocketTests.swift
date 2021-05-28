@@ -200,6 +200,12 @@ final class WebSocketTests: BaseTestCase {
         XCTAssertNil(closeReason)
         XCTAssertNil(receivedCompletion?.error)
     }
+    
+    func testMany() {
+        for _ in 0..<500 {
+            testThatWebSocketsCanSendAndReceiveMessages()
+        }
+    }
 
     func testThatWebSocketFailsWithTooSmallMaximumMessageSize() {
         // Given
